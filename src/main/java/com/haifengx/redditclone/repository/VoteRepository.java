@@ -1,8 +1,17 @@
-package com.haifengx.redditclone.repository;/**
+package com.haifengx.redditclone.repository;
+
+import com.haifengx.redditclone.model.Vote;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
  * @author Haifeng Xiao
+ * @version : 1.0
  * @date 8/14/23 11:13 AM
  * @File : VoteRepository.java
- * @version : 1.0
  * @Software : IntelliJ IDEA
- */public interface VoteRepository {
+ */
+
+@Repository
+public interface VoteRepository extends JpaRepository<Vote, Long> {
 }

@@ -1,8 +1,17 @@
-package com.haifengx.redditclone.repository;/**
+package com.haifengx.redditclone.repository;
+
+import com.haifengx.redditclone.model.Comment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
  * @author Haifeng Xiao
+ * @version : 1.0
  * @date 8/14/23 11:12 AM
  * @File : CommentRepository.java
- * @version : 1.0
  * @Software : IntelliJ IDEA
- */public interface CommentRepository {
+ */
+
+@Repository
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 }

@@ -1,4 +1,8 @@
-package com.haifengx.redditclone;
+package com.haifengx.redditclone.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Haifeng Xiao
@@ -7,5 +11,12 @@ package com.haifengx.redditclone;
  * @File : NotificationEmail.java
  * @Software : IntelliJ IDEA
  */
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationEmail {
+    private String subject;
+    private String recipient;
+    private String body;
 }

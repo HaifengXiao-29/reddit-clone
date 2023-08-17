@@ -1,8 +1,21 @@
-package com.haifengx.redditclone;/**
+package com.haifengx.redditclone;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+/**
  * @author Haifeng Xiao
+ * @version : 1.0
  * @date 8/14/23 12:32 PM
  * @File : RedditCloneApplication.java
- * @version : 1.0
  * @Software : IntelliJ IDEA
- */public class RedditCloneApplication {
+ */
+
+@SpringBootApplication
+@EnableAsync
+public class RedditCloneApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(RedditCloneApplication.class, args);
+    }
 }

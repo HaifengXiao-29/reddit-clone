@@ -1,4 +1,14 @@
-package com.haifengx.redditclone;
+package com.haifengx.redditclone.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * @author Haifeng Xiao
@@ -7,5 +17,21 @@ package com.haifengx.redditclone;
  * @File : Comment.java
  * @Software : IntelliJ IDEA
  */
+
+@NoArgsConstructor
+@Entity
+
 public class Comment {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+    @NotEmpty
+    private String text;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "postId", referencedColumnName = "postId")
+    private Post post;
+    private Instant createDate;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private User user;
 }
