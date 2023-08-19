@@ -1,5 +1,7 @@
 package com.haifengx.redditclone.controller;
 
+import com.haifengx.redditclone.dto.AuthenticationResponse;
+import com.haifengx.redditclone.dto.LoginRequest;
 import com.haifengx.redditclone.dto.RegisterRequest;
 import com.haifengx.redditclone.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -32,5 +34,10 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 }
