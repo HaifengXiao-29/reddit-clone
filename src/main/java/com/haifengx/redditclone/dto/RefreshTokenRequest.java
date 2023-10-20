@@ -1,27 +1,23 @@
 package com.haifengx.redditclone.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 /**
  * @author Haifeng Xiao
  * @version : 1.0
- * @date 8/17/23 4:39 PM
- * @File : AuthenticationResponse.java
+ * @date 10/20/23 12:15 PM
+ * @File : RefreshTokenRequest.java
  * @Software : IntelliJ IDEA
  */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AuthenticationResponse {
-    private String authenticationToken;
+public class RefreshTokenRequest {
+    @NotBlank
     private String refreshToken;
-    private Instant expiresAt;
     private String username;
 }

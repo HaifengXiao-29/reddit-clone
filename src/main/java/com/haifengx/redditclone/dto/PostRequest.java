@@ -2,27 +2,26 @@ package com.haifengx.redditclone.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * @author Haifeng Xiao
  * @version : 1.0
- * @date 8/18/23 12:33 PM
- * @File : SubredditDto.java
+ * @date 10/19/23 1:48 PM
+ * @File : PostRequest.java
  * @Software : IntelliJ IDEA
  */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class SubredditDto {
-    private Long id;
-    @NotBlank(message = "Community name is required")
-    private String name;
-    @NotBlank(message = "Description is required")
+
+public class PostRequest {
+    private Long postId;
+    private String subredditName;
+    @NotBlank(message = "Post Name cannot be empty or Null")
+    private String postName;
+    private String url;
     private String description;
-    private Integer numberOfPosts;
 }

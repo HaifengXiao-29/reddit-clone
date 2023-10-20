@@ -1,6 +1,7 @@
 package com.haifengx.redditclone.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  */
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "token")

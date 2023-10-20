@@ -2,8 +2,7 @@ package com.haifengx.redditclone.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -18,9 +17,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @Software : IntelliJ IDEA
  */
 
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
 public class Comment {
     @Id
     @GeneratedValue(strategy = IDENTITY)

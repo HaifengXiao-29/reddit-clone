@@ -2,24 +2,31 @@ package com.haifengx.redditclone.service;
 
 import com.haifengx.redditclone.dto.AuthenticationResponse;
 import com.haifengx.redditclone.dto.LoginRequest;
+import com.haifengx.redditclone.dto.RefreshTokenRequest;
 import com.haifengx.redditclone.dto.RegisterRequest;
 import com.haifengx.redditclone.exceptions.SpringRedditException;
 import com.haifengx.redditclone.model.NotificationEmail;
+import com.haifengx.redditclone.model.RefreshToken;
 import com.haifengx.redditclone.model.User;
 import com.haifengx.redditclone.model.VerificationToken;
 import com.haifengx.redditclone.repository.UserRepository;
 import com.haifengx.redditclone.repository.VerificationTokenRepository;
 import com.haifengx.redditclone.security.JwtProvider;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +39,7 @@ import java.util.UUID;
  */
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
@@ -40,6 +48,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signUp(RegisterRequest registerRequest) {
@@ -47,7 +56,7 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreated(Instant.now());
+        user.setCreated(Instant.now().atZone(ZoneId.of("America/New_York")).toInstant());
         user.setEnabled(false);
         userRepository.save(user);
         String token = generateVerificationToken(user);
@@ -57,9 +66,18 @@ public class AuthService {
                 "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
+    @Transactional(readOnly = true)
+    public User getCurrentUser() {
+        Jwt principal = (Jwt) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getSubject())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getSubject()));
+    }
+
     private String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setExpiryDate(user.getCreated().plus(2, ChronoUnit.HOURS));
         verificationToken.setToken(token);
         verificationToken.setUser(user);
         verificationTokenRepository.save(verificationToken);
@@ -85,6 +103,28 @@ public class AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token, loginRequest.getUsername());
+//        return new AuthenticationResponse(token, loginRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
+    }
+
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 }

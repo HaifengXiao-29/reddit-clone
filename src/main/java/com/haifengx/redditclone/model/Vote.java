@@ -1,7 +1,9 @@
 package com.haifengx.redditclone.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import static jakarta.persistence.FetchType.LAZY;
@@ -15,8 +17,11 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * @Software : IntelliJ IDEA
  */
 
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 
 public class Vote {
     @Id

@@ -1,7 +1,6 @@
 package com.haifengx.redditclone.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,18 +9,19 @@ import java.time.Instant;
 /**
  * @author Haifeng Xiao
  * @version : 1.0
- * @date 8/17/23 4:39 PM
- * @File : AuthenticationResponse.java
+ * @date 10/20/23 10:17 AM
+ * @File : CommentsDto.java
  * @Software : IntelliJ IDEA
  */
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AuthenticationResponse {
-    private String authenticationToken;
-    private String refreshToken;
-    private Instant expiresAt;
-    private String username;
+public class CommentsDto {
+    private Long id;
+    private Long postId;
+    private Instant createdDate;
+    private String text;
+    private String userName;
 }

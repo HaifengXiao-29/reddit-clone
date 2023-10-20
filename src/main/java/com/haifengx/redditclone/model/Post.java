@@ -2,10 +2,7 @@ package com.haifengx.redditclone.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.time.Instant;
@@ -36,12 +33,13 @@ public class Post {
     @Nullable
     @Lob
     private String description;
-    private Integer voteCount;
+    private Integer voteCount = 0;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
-    private Instant createDate;
+    private Instant createdDate;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private Subreddit subreddit;
+
 }
