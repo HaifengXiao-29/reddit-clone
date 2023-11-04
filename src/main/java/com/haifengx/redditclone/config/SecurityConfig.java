@@ -2,8 +2,6 @@ package com.haifengx.redditclone.config;
 
 import com.haifengx.redditclone.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -45,14 +43,20 @@ public class SecurityConfig{
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/**")
                         .permitAll()
-                        .requestMatchers("/api/subreddit")
+                        .requestMatchers(HttpMethod.GET, "/api/subreddit")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**")
+                        .permitAll()
+                        .requestMatchers("/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui/index.html")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
-        http.addFilterBefore(jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
